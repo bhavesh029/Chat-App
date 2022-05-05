@@ -13,11 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
             contact: contact,
             password: password
         }
-        axios.post("http://54.234.87.107:3000/user/signup", obj)
+        axios.post("http://localhost:3000/user/signup", obj)
             .then(res => {
                 console.log(res);
                 alert(res.data.message);
-                window.location.href = "../Login/login.html";
+                //window.location.href = "../Login/login.html";
             })
             .catch(err => {
                 console.log(err);

@@ -1,21 +1,26 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const dotenv = require('dotenv');
+
+const sequelize = require('./DB/database');
+const User = require('./Models/signup');
+
+const userRouter = require('./Routes/user');
+
 const app = express();
-const fs = require('fs');
 
-app.use('/login', (req, res, next) => {
-    res.send('<form onsubmit="localStorage.setItem(`username`, document.getElementById(`username`).value)" action="/login" method="POST"><input id="username" type="text" name="title"><button type="submit">add</button></form>');
-    res.redirect('/message');
-});
+app.use(cors());
+dotenv.config();
 
-// const addFile = fs.appendFile('message.txt', localStorage.getItem(username), function(err){
-//     if(err) throw err;
-//     console.log('!saved');
-// })
+app.use(bodyParser.json());
 
-app.use('/message' , (req, res, next) => {
-    res.send(fs.writeFile('message.txt', localStorage.getItem('document.getElementById(`username`).value)')));
-});
+app.use('/user', userRouter);
 
-app.listen(3000);
-
+sequelize.sync()
+    .then(() => {
+        app.listen(process.env.PORT || 3000);  
+    })
+    .catch(err => {
+        console.log(err);
+    })
