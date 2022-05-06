@@ -5,8 +5,10 @@ const dotenv = require('dotenv');
 
 const sequelize = require('./DB/database');
 const User = require('./Models/signup');
+const Mesage = require('./Models/message');
 
 const userRouter = require('./Routes/user');
+const msgRouter = require('./Routes/msg');
 
 const app = express();
 
@@ -16,6 +18,10 @@ dotenv.config();
 app.use(bodyParser.json());
 
 app.use('/user', userRouter);
+app.use('/user', msgRouter);
+
+User.hasMany(Mesage);
+Mesage.belongsTo(User);
 
 sequelize.sync()
     .then(() => {
