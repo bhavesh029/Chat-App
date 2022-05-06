@@ -1,12 +1,14 @@
-const message = require('../Models/message');
-const user = require('../Models/signup');
+const Message = require('../Models/message');
 
-exports.sendmsg = (async(req, res) => {
-    const username = req.body.username;
+exports.sendmsg = ((req, res) => {
     const message = req.body.message;
-
-    user.createMessage({message:message, Username:username}).then(() => {
-        res.sendStatus(200);
-    })
+    
+    req.user.createMessage({message:message})
+        .then(() => {
+            res.status(201).json({message, success:true});
+        })
+        .catch(err => {
+            console.log(err);
+        })
 });
 

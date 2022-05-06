@@ -18,7 +18,7 @@ dotenv.config();
 app.use(bodyParser.json());
 
 app.use('/user', userRouter);
-app.use('/user', msgRouter);
+app.use(msgRouter);
 
 User.hasMany(Mesage);
 Mesage.belongsTo(User);
