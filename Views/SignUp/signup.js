@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => {
                 console.log(res);
                 alert(res.data.message);
-                //window.location.href = "../Login/login.html";
+                window.location.href = "../Login/login.html";
             })
             .catch(err => {
                 console.log(err);

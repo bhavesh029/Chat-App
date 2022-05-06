@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem("token", res.data.token);
                 localStorage.setItem('userDetails', JSON.stringify(res.data.user));
                 alert("Succefully logged in.");
+                window.location.href = "../Chat/chat.html";
             })
             .catch(err => {
                 console.log(err);
