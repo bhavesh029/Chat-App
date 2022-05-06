@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => {
                 localStorage.setItem("token", res.data.token);
                 localStorage.setItem('userDetails', JSON.stringify(res.data.user));
+                alert("Succefully logged in.");
             })
             .catch(err => {
                 console.log(err);
