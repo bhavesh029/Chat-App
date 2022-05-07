@@ -12,3 +12,11 @@ exports.sendmsg = ((req, res) => {
         })
 });
 
+exports.getMsg = ((req, res) => {
+    req.user.getMessages().then((message) => {
+        return res.status(200).json({message, success:true});
+    }).catch(err => {
+        console.log(err);
+    })
+})
+

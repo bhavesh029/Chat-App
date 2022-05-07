@@ -54,3 +54,7 @@ exports.login = (req, res) => {
         console.log(err);
     })
 }
+
+exports.getName = (req,res) => {
+    
+}
