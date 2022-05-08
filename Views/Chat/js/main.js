@@ -38,10 +38,10 @@ window.addEventListener("DOMContentLoaded", () => {
 function getMsg(message){
     var parentElemnt = document.getElementById('showMsg');
     var msgId = `${message.id}`;
-   // console.log(msgId,message);
+    //console.log(msgId,message);
     parentElemnt.innerHTML += `
     <div class="message" id=${msgId}>
-        <p class="meta">Mary<span>9:15pm</span></p>
+        <p class="meta">${message.Username}</p>
         <p class="text">
             ${message.message}
         </p>
