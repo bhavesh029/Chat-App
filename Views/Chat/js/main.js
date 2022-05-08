@@ -21,11 +21,12 @@ window.addEventListener('DOMContentLoaded', () => {
 })
 
 window.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem('token');
+    setInterval(()=>{
+        const token = localStorage.getItem('token');
     axios.get('http://localhost:3000/getMsg', {headers: {"Authorization":token}})
         .then(response => {
             if(response.status === 200){
-                //console.log(response);
+                document.getElementById('showMsg').innerHTML="";
                 response.data.message.forEach(message => {
                     getMsg(message);
                 })
@@ -33,6 +34,8 @@ window.addEventListener("DOMContentLoaded", () => {
                 throw new Error();
             }
         })
+    },1000);
+    
 })
 
 function getMsg(message){

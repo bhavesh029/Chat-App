@@ -17,7 +17,7 @@ exports.sendmsg = ((req, res) => {
 
 exports.getMsg = ((req, res) => {
     //const UserId = req.user.id;
-    req.user.getMessages().then((message) => {
+    Message.findAll().then((message) => {
         return res.status(200).json({message, success:true});
     }).catch(err => {
         console.log(err);
