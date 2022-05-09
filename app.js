@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const sequelize = require('./DB/database');
 const User = require('./Models/signup');
 const Mesage = require('./Models/message');
+const Groups = require('./Models/group');
 
 const userRouter = require('./Routes/user');
 const msgRouter = require('./Routes/msg');
@@ -22,6 +23,9 @@ app.use(msgRouter);
 
 User.hasMany(Mesage);
 Mesage.belongsTo(User);
+
+Groups.hasMany(Mesage);
+Mesage.belongsTo(Groups);
 
 sequelize.sync()
     .then(() => {
