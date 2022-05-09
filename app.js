@@ -7,9 +7,11 @@ const sequelize = require('./DB/database');
 const User = require('./Models/signup');
 const Mesage = require('./Models/message');
 const Groups = require('./Models/group');
+const userGroup = require('./Models/UserGroup');
 
 const userRouter = require('./Routes/user');
 const msgRouter = require('./Routes/msg');
+const grpRouter = require('./Routes/group');
 
 const app = express();
 
@@ -20,9 +22,13 @@ app.use(bodyParser.json());
 
 app.use('/user', userRouter);
 app.use(msgRouter);
+app.use(grpRouter);
 
 User.hasMany(Mesage);
 Mesage.belongsTo(User);
+
+Groups.belongsToMany(User, {through: userGroup});
+User.belongsToMany(Groups, {through: userGroup});
 
 Groups.hasMany(Mesage);
 Mesage.belongsTo(Groups);
