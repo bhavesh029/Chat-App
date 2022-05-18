@@ -2,6 +2,7 @@ const bycrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../Models/signup');
+const usergroup = require('../Models/usergroups');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -55,6 +56,25 @@ exports.login = (req, res) => {
     })
 }
 
-exports.getName = (req,res) => {
-    
+exports.getUser = async (req,res) => {
+    try{
+        const grpId = req.query.id;
+        if(!grpId){
+            const dbuser = await User.findAll();
+            return res.json({success:true, message:"All user fetched", dbuser});
+        }else{
+            const groupusers = await usergroup.findAll({where: {GroupGrpId: grpId}});
+            const grpUserIds = [];
+
+            groupusers.forEach((elem) => {
+                grpUserIds.push(elem.UserId);
+            })
+
+            const dbuser = await User.findAll({where: {id: grpUserIds}});
+            return res.json({message:"User fetched from Groups", dbuser, success:true});
+        }
+    }
+    catch{
+        return res.json({success:false, message:"Fetching of user failed"});
+    }
 }

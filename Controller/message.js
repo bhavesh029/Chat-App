@@ -1,39 +1,47 @@
 const Sequelize = require('sequelize');
 const Message = require('../Models/message');
-const group = require('../Models/group');
 
-exports.sendmsg = (async (req, res) => {
-    try{
-        const message = req.body.message;
-        const Username = req.user.name;
-        const grpId = req.query.id;
-
-        if(!grpId){
-           await req.user.createMessage({Username:Username,message:message})
-           return res.status(201).json({message, success:true});
-        }else{
-            await req.user.createMessage({Username:Username, message:message, grpId:grpId});
-            return res.status(201).json({message, success:true});
-        }
+exports.sendmsg = ((req, res) => {
+    const message = req.body.message;
+    const Username = req.user.name;
+    const grpId = req.query.id;
+    if(!grpId){
+        req.user.createMessage({Username:Username,message:message})
+        .then(() => {
+            res.status(201).json({message, success:true});
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    } else{
+        req.user.createMessage({Username:Username,message:message,GroupGrpId:grpId})
+        .then(()=> {
+            res.status(201).json({message:"Successfully created the group with user", success:true});
+        })
+        .catch(err => {
+            return res.status(404).json( {success: false , message: 'Chats retrieval from DB Failed', err} )
+        })
     }
-    catch{
-        return res.status(400).json({success: false, message:"Somthing went wrong"});
-    }
+    
 });
 
-exports.getMsg = (async(req, res) => {
-    try{
-        const groupId = req.query.id;
-        if(!groupId){
-            await Message.findAll({where:{grpId: null}});
+exports.getMsg = ((req, res) => {
+    //const UserId = req.user.id;
+    const grpId = req.query.id;
+    if(!grpId){
+        Message.findAll({where:{GroupGrpId:null}}).then((message) => {
             return res.status(200).json({message, success:true});
-        }else{
-            await Message.findAll({where :{groupId:grpId}});
-            return res.status(200).json({message, success:true});
-        }
+        }).catch(err => {
+            console.log(err);
+        })
+    } else{
+        Message.findAll({where:{GroupGrpId:grpId}}).then(()=>{
+            return res.status(200).json({msg:"Group chats retrived from the DB", success:true});
+        })
+        .catch(err =>{
+            console.log(err);
+        })
     }
-    catch{
-        return res.status(400).json({success:false, message:"Something went wrong"});
-    }
-});
+    
+})
 

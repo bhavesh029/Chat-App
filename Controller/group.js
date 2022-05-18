@@ -1,48 +1,49 @@
 const Sequelize = require('sequelize');
 
-const User = require('../Models/signup');
-const Message = require('../Models/message');
-const Groups = require('../Models/group');
-const userGroup = require('../Models/UserGroup');
+const user = require('../Models/signup');
+const message = require('../Models/message');
+const group = require('../Models/group');
+const usergroup = require('../Models/usergroups');
 
-exports.createGroup = async(req, res) => {
+exports.createGrp = async (req, res) => {
     try{
-        const grpName = req.body.grpName;
+        const grpName = req.body.groupName;
         const isAdmin = req.body.isAdmin;
         const uId = req.body.uId;
 
-        let existingGrp = await Groups.findOne({grpName:grpName})
-        if(!existingGrp){
-            await Groups.createGroup({where:{grpName:grpName}})
-            existingGrp = await Groups.findOne({where: {grpName:grpName}})
+        let existingGroup = await group.findOne({ where: {grpName: grpName}})
+        if(!existingGroup){
+            await group.create({grpName:grpName})
+            existingGroup = await group.findOne({where:{grpName:grpName}})
         }
-        const gId = existingGrp.grpId;
-        await userGroup.createGroup({
-            isAdmin:isAdmin,
-            grpId:gId,
-            userId: uId
-        })
+        const gId = existingGroup.grpId;
 
-        return res.status(201).json({success: true, message:"Successfuly created Group"});
+        await usergroup.create({isAdmin:isAdmin, GroupGrpId:gId, UserId:uId})
+        return res.status(201).json({success: true, message:"user added to the group successfully"});
     }
-    catch{(err)=> {
-        return res.status(404).json({err,success:false,message:"Something went wrong"});
-    }}
+    catch{(err) => {
+        console.log(err);
+        return res.status(404).json({success: false, message:"Adding user to group failed, try again"})
+    }
+
+    }
 }
 
-exports.getGroup = async(req, res) => {
+
+exports.getGrps = async (req, res) => {
     try{
         const uId = req.user.id;
         let membergrpIds = [];
-        const memberGrps = await userGroup.findAll({where: {UserId:uId} })
+        const memberGrps = await usergroup.findAll({where: {UserId: uId}} )
 
-        for(let i=0;i<memberGrps.length; i++){
-            membergrpIds.push(memberGrps[i].grpId);
+        for(let i=0;i<memberGrps.length;i++){
+            membergrpIds.push(memberGrps[i].GroupGrpId);
         }
-        const memberOf = await Groups.findAll({where:{grpId:{[Sequelize.Op.or]: membergrpIds}}})
-        return res.status(201).json({success:true, memberOf});
+
+        const memberof = await group.findAll({where:{grpId: {[Sequelize.Op.or]: membergrpIds}}})
+        return res.status(201).json({success:true, message:"Retrieve Group from DB", memberof});
     }
     catch{
-        return res.status(404).json({success:true, message:"Problem with fetching the groups"});
+        return res.status(404).json({success: false, message:"Failed to retrieve groups from DB"});
     }
 }

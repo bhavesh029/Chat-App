@@ -1,19 +1,18 @@
 const Sequelize = require('sequelize');
-
 const sequelize = require('../DB/database');
 
-const group = sequelize.define('group', {
+const grouptable = sequelize.define('Groups',{
     grpId:{
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true
+        type:Sequelize.INTEGER,
+        allowNull:false,
+        autoIncrement:true,
+        primaryKey:true
     },
     grpName:{
-        type: Sequelize.STRING,
+        type:Sequelize.STRING,
         allowNull: false,
         unique: true
     }
-})
+});
 
-module.exports = group;
+module.exports = grouptable;

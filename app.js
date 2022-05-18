@@ -4,10 +4,11 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 
 const sequelize = require('./DB/database');
+
 const User = require('./Models/signup');
 const Mesage = require('./Models/message');
-const Groups = require('./Models/group');
-const userGroup = require('./Models/UserGroup');
+const groups = require('./Models/group');
+const usergroup = require('./Models/usergroups');
 
 const userRouter = require('./Routes/user');
 const msgRouter = require('./Routes/msg');
@@ -27,13 +28,13 @@ app.use(grpRouter);
 User.hasMany(Mesage);
 Mesage.belongsTo(User);
 
-Groups.belongsToMany(User, {through: userGroup});
-User.belongsToMany(Groups, {through: userGroup});
+groups.belongsToMany(User, {through: usergroup});
+User.belongsToMany(groups, {through: usergroup});
 
-Groups.hasMany(Mesage);
-Mesage.belongsTo(Groups);
+groups.hasMany(Mesage);
+Mesage.belongsTo(groups);
 
-sequelize.sync()
+sequelize.sync({})
     .then(() => {
         app.listen(process.env.PORT || 3000);  
     })
